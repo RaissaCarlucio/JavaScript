@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elemento do DOM exemplo 3</title>
+</head>
+<body>
+    <button onclick="confirma()">Clique para ver meu perfil de League of Legends</button>
+    
+</body>
+<script>
+    function confirma(){
+        let confirmacao = confirm("Clique em ok para ser redirecionado")
+        if(confirmacao){
+            window.location.href = "https://www.leagueofgraphs.com/pt/summoner/br/The+Rebel+Killer-Xayah";
+        }else{
+            alert(":(")
+        }
+    }
+</script>
+</html>
