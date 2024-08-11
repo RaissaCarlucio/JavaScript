@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como usamos exception?</title>
+    <style>
+    </style>
+</head>
+<body>
+    <h1>Informaçoes dos Funcionários</h1>
+    <form id="formFuncionario">
+        <fieldset>
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" required>
+            <br>
+            <label for="idade">Idade:</label>
+            <input type="number" id="idade" required>
+            <br>
+            <label for="cargo">Cargo:</label>
+            <input type="text" id="cargo" required>
+            <br>
+            <label for="departamento">Departamento (para Gerente):</label>
+            <input type="text" id="departamento">
+            <br>
+            <label for="linguagem">Linguagem de Programação (para Desenvolvedor):</label>
+            <input type="text" id="linguagem">
+            <br>
+            <button type="button" onclick="criarFuncionario()">Cadastrar Funcionário</button>
+        </fieldset>
+    </form>
+    <div id="resultado"></div>
+
+    <script>
+        class Funcionario {
+            constructor(nome, idade, cargo) {
+                this.nome = nome;
+                this.idade = idade;
+                this.cargo = cargo;
+            }
+
+            seApresentar() {
+                return `Olá, meu nome é ${this.nome}, tenho ${this.idade} anos e meu cargo é ${this.cargo}.`;
+            }
+
+            trabalhar() {
+                return `${this.nome} está trabalhando como ${this.cargo}.`;
+            }
+        }
+
+        class Gerente extends Funcionario {
+            constructor(nome, idade, cargo, departamento) {
+                super(nome, idade, cargo);
+                this.departamento = departamento;
+            }
+
+            gerenciar() {
+                return `${this.nome} está gerenciando o departamento de ${this.departamento}.`;
+            }
+        }
+
+        class Desenvolvedor extends Funcionario {
+            constructor(nome, idade, cargo, linguagem) {
+                super(nome, idade, cargo);
+                this.linguagem = linguagem;
+            }
+
+            programar() {
+                return `${this.nome} está programando em ${this.linguagem}.`;
+            }
+        }
+
+        function criarFuncionario() {
+            const nome = document.getElementById('nome').value;
+            const idade = parseInt(document.getElementById('idade').value, 10);
+            const cargo = document.getElementById('cargo').value;
+            const departamento = document.getElementById('departamento').value;
+            const linguagem = document.getElementById('linguagem').value;
+
+            document.getElementById('resultado').innerHTML = '';
+
+            try {
+                if (!nome || !idade || !cargo) {
+                    throw new Error('Nome, idade e cargo são obrigatórios.');
+                }
+
+                let funcionario;
+                
+                if (cargo.toLowerCase() === 'gerente') {
+                    if (!departamento) {
+                        throw new Error('Departamento é obrigatório para Gerentes.');
+                    }
+                    funcionario = new Gerente(nome, idade, cargo, departamento);
+                } else if (cargo.toLowerCase() === 'desenvolvedor') {
+                    if (!linguagem) {
+                        throw new Error('Linguagem de programação é obrigatória para Desenvolvedores.');
+                    }
+                    funcionario = new Desenvolvedor(nome, idade, cargo, linguagem);
+                } else {
+                    throw new Error('Cargo inválido. Deve ser Gerente ou Desenvolvedor.');
+                }
+
+                const resultado = `
+                    <p>${funcionario.seApresentar()}</p>
+                    <p>${funcionario.trabalhar()}</p>
+                    ${funcionario instanceof Gerente ? `<p>${funcionario.gerenciar()}</p>` : ''}
+                    ${funcionario instanceof Desenvolvedor ? `<p>${funcionario.programar()}</p>` : ''}
+                `;
+
+                document.getElementById('resultado').innerHTML = resultado;
+
+            } catch (error) {
+                document.getElementById('resultado').innerHTML = `<p style="color: red;">Erro: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
